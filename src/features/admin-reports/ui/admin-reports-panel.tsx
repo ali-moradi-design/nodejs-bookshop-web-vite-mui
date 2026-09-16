@@ -1,5 +1,4 @@
 import { useMemo } from 'react';
-import { type ColumnDef } from '@tanstack/react-table';
 import { useTranslation } from 'react-i18next';
 import {
   ISSUE_STATUSES,
@@ -7,7 +6,7 @@ import {
   type IssueReport,
   type IssueStatus,
 } from '@/entities/report';
-import { DataTable } from '@/shared/ui';
+import { DataTable, type DataTableColumn } from '@/shared/ui';
 import { formatDate } from '@/shared/lib';
 import { usePreferences } from '@/shared/hooks';
 import { ApiError } from '@/shared/api';
@@ -28,17 +27,17 @@ export function AdminReportsPanel() {
   const { data, isLoading, error } = useIssuesQuery();
   const update = useUpdateIssueStatusMutation();
 
-  const columns = useMemo<ColumnDef<IssueReport>[]>(
+  const columns = useMemo<DataTableColumn<IssueReport>[]>(
     () => [
-      { accessorKey: 'subject', header: 'Subject' },
-      { accessorKey: 'type', header: 'Type' },
+      { field: 'subject', header: 'Subject' },
+      { field: 'type', header: 'Type' },
       {
-        accessorKey: 'status',
+        field: 'status',
         header: t('common.status'),
-        cell: ({ row }) => (
+        cell: (row) => (
           <Select
-            value={row.original.status}
-            onValueChange={(v) => update.mutate({ id: row.original.id, status: v as IssueStatus })}
+            value={row.status}
+            onValueChange={(v) => update.mutate({ id: row.id, status: v as IssueStatus })}
           >
             <SelectTrigger className="w-[140px]">
               <SelectValue />
@@ -56,12 +55,12 @@ export function AdminReportsPanel() {
       {
         id: 'reporter',
         header: 'Reporter',
-        cell: ({ row }) => row.original.populated?.reporter?.email || row.original.reporter,
+        cell: (row) => row.populated?.reporter?.email || row.reporter,
       },
       {
-        accessorKey: 'createdAt',
+        field: 'createdAt',
         header: 'Created',
-        cell: ({ row }) => formatDate(row.original.createdAt, locale),
+        cell: (row) => formatDate(row.createdAt, locale),
       },
     ],
     [t, locale, update],

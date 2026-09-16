@@ -1,25 +1,37 @@
-import { cva, type VariantProps } from 'class-variance-authority';
+import Chip from '@mui/material/Chip';
 import { cn } from '@/shared/lib';
 
-const badgeVariants = cva(
-  'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors',
+export type BadgeVariant = 'default' | 'secondary' | 'outline' | 'destructive' | 'success';
+
+export interface BadgeProps extends React.HTMLAttributes<HTMLDivElement> {
+  variant?: BadgeVariant;
+}
+
+const map: Record<
+  BadgeVariant,
   {
-    variants: {
-      variant: {
-        default: 'border-transparent bg-primary text-primary-foreground',
-        secondary: 'border-transparent bg-secondary text-secondary-foreground',
-        outline: 'text-foreground',
-        destructive: 'border-transparent bg-destructive text-destructive-foreground',
-        success: 'border-transparent bg-emerald-500/15 text-emerald-700 dark:text-emerald-300',
-      },
-    },
-    defaultVariants: { variant: 'default' },
-  },
-);
+    color: 'primary' | 'secondary' | 'error' | 'success' | 'default';
+    variant: 'filled' | 'outlined';
+  }
+> = {
+  default: { color: 'primary', variant: 'filled' },
+  secondary: { color: 'secondary', variant: 'filled' },
+  outline: { color: 'default', variant: 'outlined' },
+  destructive: { color: 'error', variant: 'filled' },
+  success: { color: 'success', variant: 'filled' },
+};
 
-export interface BadgeProps
-  extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof badgeVariants> {}
-
-export const Badge = ({ className, variant, ...props }: BadgeProps) => (
-  <div className={cn(badgeVariants({ variant }), className)} {...props} />
-);
+export const Badge = ({ className, variant = 'default', children, ...props }: BadgeProps) => {
+  const m = map[variant];
+  return (
+    <Chip
+      size="small"
+      color={m.color}
+      variant={m.variant}
+      label={children}
+      className={cn('!h-6 !text-xs font-semibold', className)}
+      component="div"
+      {...(props as object)}
+    />
+  );
+};

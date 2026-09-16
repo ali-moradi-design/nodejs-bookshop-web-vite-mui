@@ -1,8 +1,7 @@
 import { useMemo } from 'react';
-import { type ColumnDef } from '@tanstack/react-table';
 import { useTranslation } from 'react-i18next';
 import { usePermissionsQuery, type Permission } from '@/entities/permission';
-import { DataTable, Alert, Badge, PageLoader } from '@/shared/ui';
+import { DataTable, Alert, Badge, PageLoader, type DataTableColumn } from '@/shared/ui';
 import { ApiError } from '@/shared/api';
 import { usePageTitle } from '@/shared/hooks';
 
@@ -11,16 +10,16 @@ export function AdminPermissionsPanel() {
   usePageTitle(t('nav.permissions'));
   const { data, isLoading, error } = usePermissionsQuery();
 
-  const columns = useMemo<ColumnDef<Permission>[]>(
+  const columns = useMemo<DataTableColumn<Permission>[]>(
     () => [
-      { accessorKey: 'slug', header: 'Slug' },
-      { accessorKey: 'name', header: 'Name' },
+      { field: 'slug', header: 'Slug' },
+      { field: 'name', header: 'Name' },
       {
-        accessorKey: 'section',
+        field: 'section',
         header: 'Section',
-        cell: ({ row }) => <Badge variant="secondary">{row.original.section}</Badge>,
+        cell: (row) => <Badge variant="secondary">{row.section}</Badge>,
       },
-      { accessorKey: 'description', header: 'Description' },
+      { field: 'description', header: 'Description' },
     ],
     [],
   );

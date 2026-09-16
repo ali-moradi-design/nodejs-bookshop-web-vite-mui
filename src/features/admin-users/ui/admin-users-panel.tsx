@@ -1,8 +1,7 @@
 import { useMemo } from 'react';
-import { type ColumnDef } from '@tanstack/react-table';
 import { useTranslation } from 'react-i18next';
 import { getRoleNames, useUsersQuery, type User } from '@/entities/user';
-import { DataTable } from '@/shared/ui';
+import { DataTable, type DataTableColumn } from '@/shared/ui';
 import { ApiError } from '@/shared/api';
 import { Alert, Badge, Button, PageLoader } from '@/shared/ui';
 import { useToggleUserActiveMutation } from '../model/use-toggle-user-active-mutation';
@@ -14,16 +13,16 @@ export function AdminUsersPanel() {
   const toggleActive = useToggleUserActiveMutation();
   const remove = useDeleteUserMutation();
 
-  const columns = useMemo<ColumnDef<User>[]>(
+  const columns = useMemo<DataTableColumn<User>[]>(
     () => [
-      { accessorKey: 'name', header: 'Name' },
-      { accessorKey: 'email', header: 'Email' },
+      { field: 'name', header: 'Name' },
+      { field: 'email', header: 'Email' },
       {
         id: 'roles',
         header: 'Roles',
-        cell: ({ row }) => (
+        cell: (row) => (
           <div className="flex flex-wrap gap-1">
-            {getRoleNames(row.original).map((r) => (
+            {getRoleNames(row).map((r) => (
               <Badge key={r} variant="secondary">
                 {r}
               </Badge>
@@ -32,27 +31,27 @@ export function AdminUsersPanel() {
         ),
       },
       {
-        accessorKey: 'isActive',
+        field: 'isActive',
         header: 'Active',
-        cell: ({ row }) => (
-          <Badge variant={row.original.isActive ? 'success' : 'outline'}>
-            {row.original.isActive ? 'yes' : 'no'}
+        cell: (row) => (
+          <Badge variant={row.isActive ? 'success' : 'outline'}>
+            {row.isActive ? 'yes' : 'no'}
           </Badge>
         ),
       },
       {
         id: 'actions',
         header: t('common.actions'),
-        cell: ({ row }) => (
+        cell: (row) => (
           <div className="flex gap-2">
-            <Button size="sm" variant="outline" onClick={() => toggleActive.mutate(row.original)}>
+            <Button size="sm" variant="outline" onClick={() => toggleActive.mutate(row)}>
               Toggle
             </Button>
             <Button
               size="sm"
               variant="destructive"
               onClick={() => {
-                if (confirm('Delete user?')) remove.mutate(row.original.id);
+                if (confirm('Delete user?')) remove.mutate(row.id);
               }}
             >
               {t('common.delete')}

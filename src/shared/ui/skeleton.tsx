@@ -1,5 +1,6 @@
+import MuiSkeleton from '@mui/material/Skeleton';
 import { cn } from '@/shared/lib';
 
 export const Skeleton = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
-  <div className={cn('animate-pulse rounded-md bg-muted', className)} {...props} />
+  <MuiSkeleton variant="rounded" className={cn('bg-muted', className)} {...(props as object)} />
 );

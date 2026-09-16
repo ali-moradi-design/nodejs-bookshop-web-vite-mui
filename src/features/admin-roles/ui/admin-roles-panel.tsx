@@ -1,8 +1,7 @@
 import { useMemo } from 'react';
-import { type ColumnDef } from '@tanstack/react-table';
 import { useTranslation } from 'react-i18next';
 import { useRolesQuery, type Role } from '@/entities/role';
-import { DataTable, Alert, Badge, PageLoader } from '@/shared/ui';
+import { DataTable, Alert, Badge, PageLoader, type DataTableColumn } from '@/shared/ui';
 import { ApiError } from '@/shared/api';
 import { usePageTitle } from '@/shared/hooks';
 
@@ -11,15 +10,15 @@ export function AdminRolesPanel() {
   usePageTitle(t('nav.roles'));
   const { data, isLoading, error } = useRolesQuery();
 
-  const columns = useMemo<ColumnDef<Role>[]>(
+  const columns = useMemo<DataTableColumn<Role>[]>(
     () => [
-      { accessorKey: 'name', header: 'Name' },
-      { accessorKey: 'description', header: 'Description' },
+      { field: 'name', header: 'Name' },
+      { field: 'description', header: 'Description' },
       {
         id: 'permissions',
         header: 'Permissions',
-        cell: ({ row }) => {
-          const perms = row.original.permissions || [];
+        cell: (row) => {
+          const perms = row.permissions || [];
           const labels = perms.map((p) => (typeof p === 'string' ? p : p.slug)).slice(0, 8);
           return (
             <div className="flex max-w-md flex-wrap gap-1">

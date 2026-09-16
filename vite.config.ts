@@ -51,6 +51,8 @@ export default defineConfig(({ mode }) => {
               return 'vendor';
             }
             if (id.includes('@tanstack')) return 'query';
+            if (id.includes('@mui') || id.includes('@emotion')) return 'mui';
+            if (id.includes('ag-grid')) return 'grid';
             if (
               id.includes('react-hook-form') ||
               id.includes('/zod/') ||

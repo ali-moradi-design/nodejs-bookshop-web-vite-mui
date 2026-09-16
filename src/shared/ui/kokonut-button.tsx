@@ -1,7 +1,7 @@
 import { cn } from '@/shared/lib';
 import { Button, type ButtonProps } from './button';
 
-/** Minimal Kokonut-style accent button (registry: @kokonutui). */
+/** Accent button styled after Kokonut UI registry (@kokonutui). */
 export function KokonutButton({ className, variant, ...props }: ButtonProps) {
   const isPrimary = variant === undefined || variant === 'default';
   return (

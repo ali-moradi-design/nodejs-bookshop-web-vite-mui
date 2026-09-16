@@ -1,12 +1,13 @@
-import { Loader2 } from 'lucide-react';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
 import { cn } from '@/shared/lib';
 
 export const Spinner = ({ className }: { className?: string }) => (
-  <Loader2 className={cn('h-5 w-5 animate-spin text-muted-foreground', className)} />
+  <CircularProgress size={20} className={cn('text-muted-foreground', className)} />
 );
 
 export const PageLoader = () => (
-  <div className="flex min-h-[40vh] items-center justify-center">
-    <Spinner className="h-8 w-8" />
-  </div>
+  <Box className="flex min-h-[40vh] items-center justify-center">
+    <CircularProgress size={32} />
+  </Box>
 );

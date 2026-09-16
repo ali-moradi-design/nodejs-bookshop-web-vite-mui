@@ -42,7 +42,7 @@ export { EmptyState } from './empty-state';
 export { Alert } from './alert';
 export { KokonutButton } from './kokonut-button';
 export { BeamsBackground } from './beams-background';
-export { DataTable } from './data-table';
+export { DataTable, type DataTableColumn, type DataTablePagination } from './data-table';
 export { Slider } from './slider';
 export {
   Sheet,

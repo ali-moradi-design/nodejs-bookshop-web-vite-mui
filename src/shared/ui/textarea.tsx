@@ -1,16 +1,40 @@
 import * as React from 'react';
-import { cn } from '@/shared/lib';
+import TextField from '@mui/material/TextField';
 
 export const Textarea = React.forwardRef<HTMLTextAreaElement, React.ComponentProps<'textarea'>>(
-  ({ className, ...props }, ref) => (
-    <textarea
-      className={cn(
-        'flex min-h-[80px] w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
-        className,
-      )}
-      ref={ref}
-      {...props}
-    />
-  ),
+  ({ className, onChange, ...props }, ref) => {
+    const {
+      value,
+      defaultValue,
+      name,
+      id,
+      placeholder,
+      disabled,
+      required,
+      rows,
+      onBlur,
+      onFocus,
+    } = props;
+    return (
+      <TextField
+        inputRef={ref}
+        name={name}
+        id={id}
+        placeholder={placeholder}
+        disabled={disabled}
+        required={required}
+        value={value}
+        defaultValue={defaultValue}
+        onChange={onChange as React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>}
+        onBlur={onBlur as React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>}
+        onFocus={onFocus as React.FocusEventHandler<HTMLInputElement | HTMLTextAreaElement>}
+        multiline
+        minRows={rows ?? 3}
+        fullWidth
+        size="small"
+        className={className}
+      />
+    );
+  },
 );
 Textarea.displayName = 'Textarea';

@@ -1,11 +1,17 @@
 import * as React from 'react';
+import MuiTable from '@mui/material/Table';
+import TableBodyMui from '@mui/material/TableBody';
+import TableCellMui from '@mui/material/TableCell';
+import TableHeadMui from '@mui/material/TableHead';
+import TableRowMui from '@mui/material/TableRow';
+import TableContainer from '@mui/material/TableContainer';
 import { cn } from '@/shared/lib';
 
 export const Table = React.forwardRef<HTMLTableElement, React.HTMLAttributes<HTMLTableElement>>(
   ({ className, ...props }, ref) => (
-    <div className="relative w-full overflow-auto">
-      <table ref={ref} className={cn('w-full caption-bottom text-sm', className)} {...props} />
-    </div>
+    <TableContainer className="relative w-full overflow-auto">
+      <MuiTable ref={ref} className={cn('w-full caption-bottom text-sm', className)} {...props} />
+    </TableContainer>
   ),
 );
 Table.displayName = 'Table';
@@ -14,7 +20,7 @@ export const TableHeader = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement>
 >(({ className, ...props }, ref) => (
-  <thead ref={ref} className={cn('[&_tr]:border-b', className)} {...props} />
+  <TableHeadMui ref={ref} className={cn(className)} {...props} />
 ));
 TableHeader.displayName = 'TableHeader';
 
@@ -22,7 +28,7 @@ export const TableBody = React.forwardRef<
   HTMLTableSectionElement,
   React.HTMLAttributes<HTMLTableSectionElement>
 >(({ className, ...props }, ref) => (
-  <tbody ref={ref} className={cn('[&_tr:last-child]:border-0', className)} {...props} />
+  <TableBodyMui ref={ref} className={cn(className)} {...props} />
 ));
 TableBody.displayName = 'TableBody';
 
@@ -30,28 +36,20 @@ export const TableRow = React.forwardRef<
   HTMLTableRowElement,
   React.HTMLAttributes<HTMLTableRowElement>
 >(({ className, ...props }, ref) => (
-  <tr
-    ref={ref}
-    className={cn(
-      'border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted',
-      className,
-    )}
-    {...props}
-  />
+  <TableRowMui ref={ref} hover className={cn(className)} {...props} />
 ));
 TableRow.displayName = 'TableRow';
 
 export const TableHead = React.forwardRef<
   HTMLTableCellElement,
   React.ThHTMLAttributes<HTMLTableCellElement>
->(({ className, ...props }, ref) => (
-  <th
+>(({ className, align, ...props }, ref) => (
+  <TableCellMui
     ref={ref}
-    className={cn(
-      'h-12 px-4 text-start align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pe-0',
-      className,
-    )}
-    {...props}
+    component="th"
+    align={align === 'char' ? undefined : align}
+    className={cn('!font-medium text-muted-foreground', className)}
+    {...(props as object)}
   />
 ));
 TableHead.displayName = 'TableHead';
@@ -59,11 +57,12 @@ TableHead.displayName = 'TableHead';
 export const TableCell = React.forwardRef<
   HTMLTableCellElement,
   React.TdHTMLAttributes<HTMLTableCellElement>
->(({ className, ...props }, ref) => (
-  <td
+>(({ className, align, ...props }, ref) => (
+  <TableCellMui
     ref={ref}
-    className={cn('p-4 align-middle [&:has([role=checkbox])]:pe-0', className)}
-    {...props}
+    align={align === 'char' ? undefined : align}
+    className={cn(className)}
+    {...(props as object)}
   />
 ));
 TableCell.displayName = 'TableCell';

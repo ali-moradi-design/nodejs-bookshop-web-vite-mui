@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react';
-import { type ColumnDef } from '@tanstack/react-table';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zInt, zNum } from '@/shared/lib';
@@ -8,7 +7,7 @@ import type { Resolver } from 'react-hook-form';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 import { uploadBookCover, useBooksQuery, type Book } from '@/entities/book';
-import { DataTable } from '@/shared/ui';
+import { DataTable, type DataTableColumn } from '@/shared/ui';
 import { formatMoney } from '@/shared/lib';
 import { usePreferences } from '@/shared/hooks';
 import { ApiError } from '@/shared/api';
@@ -121,35 +120,34 @@ export function AdminBooksPanel() {
     }
   };
 
-  const columns = useMemo<ColumnDef<Book>[]>(
+  const columns = useMemo<DataTableColumn<Book>[]>(
     () => [
-      { accessorKey: 'title', header: 'Title' },
-      { accessorKey: 'author', header: 'Author' },
+      { field: 'title', header: 'Title' },
+      { field: 'author', header: 'Author' },
       {
-        accessorKey: 'price',
+        field: 'price',
         header: 'Price',
-        cell: ({ row }) => formatMoney(row.original.price, row.original.currency, locale),
+        cell: (row) => formatMoney(row.price, row.currency, locale),
       },
-      { accessorKey: 'stock', header: 'Stock' },
+      { field: 'stock', header: 'Stock' },
       {
-        accessorKey: 'featured',
+        field: 'featured',
         header: 'Featured',
-        cell: ({ row }) =>
-          row.original.featured ? <Badge>Yes</Badge> : <Badge variant="outline">No</Badge>,
+        cell: (row) => (row.featured ? <Badge>Yes</Badge> : <Badge variant="outline">No</Badge>),
       },
       {
         id: 'actions',
         header: t('common.actions'),
-        cell: ({ row }) => (
+        cell: (row) => (
           <div className="flex gap-2">
-            <Button size="sm" variant="outline" onClick={() => openEdit(row.original)}>
+            <Button size="sm" variant="outline" onClick={() => openEdit(row)}>
               {t('common.edit')}
             </Button>
             <Button
               size="sm"
               variant="destructive"
               onClick={() => {
-                if (confirm('Delete this book?')) remove.mutate(row.original.id);
+                if (confirm('Delete this book?')) remove.mutate(row.id);
               }}
             >
               {t('common.delete')}

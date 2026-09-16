@@ -1,8 +1,7 @@
 import { useMemo } from 'react';
-import { type ColumnDef } from '@tanstack/react-table';
 import { useTranslation } from 'react-i18next';
 import { useOrdersQuery, ORDER_STATUSES, type Order, type OrderStatus } from '@/entities/order';
-import { DataTable } from '@/shared/ui';
+import { DataTable, type DataTableColumn } from '@/shared/ui';
 import { formatMoney, formatDate } from '@/shared/lib';
 import { usePreferences } from '@/shared/hooks';
 import { ApiError } from '@/shared/api';
@@ -24,20 +23,20 @@ export function AdminOrdersPanel() {
   const { data, isLoading, error } = useOrdersQuery();
   const update = useUpdateOrderStatusMutation();
 
-  const columns = useMemo<ColumnDef<Order>[]>(
+  const columns = useMemo<DataTableColumn<Order>[]>(
     () => [
       {
-        accessorKey: 'id',
+        field: 'id',
         header: 'ID',
-        cell: ({ row }) => <span className="font-mono text-xs">{row.original.id.slice(-10)}</span>,
+        cell: (row) => <span className="font-mono text-xs">{row.id.slice(-10)}</span>,
       },
       {
-        accessorKey: 'status',
+        field: 'status',
         header: t('common.status'),
-        cell: ({ row }) => (
+        cell: (row) => (
           <Select
-            value={row.original.status}
-            onValueChange={(v) => update.mutate({ id: row.original.id, status: v as OrderStatus })}
+            value={row.status}
+            onValueChange={(v) => update.mutate({ id: row.id, status: v as OrderStatus })}
           >
             <SelectTrigger className="w-[160px]">
               <SelectValue />
@@ -53,19 +52,19 @@ export function AdminOrdersPanel() {
         ),
       },
       {
-        accessorKey: 'payment',
+        field: 'payment',
         header: 'Payment',
-        cell: ({ row }) => <Badge variant="outline">{row.original.payment.status}</Badge>,
+        cell: (row) => <Badge variant="outline">{row.payment.status}</Badge>,
       },
       {
-        accessorKey: 'totalAmount',
+        field: 'totalAmount',
         header: 'Total',
-        cell: ({ row }) => formatMoney(row.original.totalAmount, 'USD', locale),
+        cell: (row) => formatMoney(row.totalAmount, 'USD', locale),
       },
       {
-        accessorKey: 'createdAt',
+        field: 'createdAt',
         header: 'Created',
-        cell: ({ row }) => formatDate(row.original.createdAt, locale),
+        cell: (row) => formatDate(row.createdAt, locale),
       },
     ],
     [t, locale, update],

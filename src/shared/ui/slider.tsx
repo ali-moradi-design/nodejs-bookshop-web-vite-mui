@@ -1,31 +1,34 @@
 import * as React from 'react';
-import * as SliderPrimitive from '@radix-ui/react-slider';
+import MuiSlider from '@mui/material/Slider';
 import { cn } from '@/shared/lib';
 
-export const Slider = React.forwardRef<
-  React.ElementRef<typeof SliderPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>
->(({ className, value, defaultValue, ...props }, ref) => {
-  const thumbCount = (value ?? defaultValue ?? [0]).length;
+type SliderProps = {
+  className?: string;
+  value?: number[];
+  defaultValue?: number[];
+  min?: number;
+  max?: number;
+  step?: number;
+  onValueChange?: (value: number[]) => void;
+  disabled?: boolean;
+  'aria-label'?: string;
+};
 
-  return (
-    <SliderPrimitive.Root
+export const Slider = React.forwardRef<HTMLSpanElement, SliderProps>(
+  ({ className, value, defaultValue, onValueChange, min, max, step, disabled, ...props }, ref) => (
+    <MuiSlider
       ref={ref}
       value={value}
       defaultValue={defaultValue}
-      className={cn('relative flex w-full touch-none select-none items-center', className)}
+      min={min}
+      max={max}
+      step={step}
+      disabled={disabled}
+      onChange={(_, v) => onValueChange?.(Array.isArray(v) ? v : [v])}
+      className={cn(className)}
+      valueLabelDisplay="off"
       {...props}
-    >
-      <SliderPrimitive.Track className="relative h-1.5 w-full grow overflow-hidden rounded-full bg-primary/20">
-        <SliderPrimitive.Range className="absolute h-full bg-primary" />
-      </SliderPrimitive.Track>
-      {Array.from({ length: thumbCount }).map((_, i) => (
-        <SliderPrimitive.Thumb
-          key={i}
-          className="block h-4 w-4 rounded-full border border-primary/50 bg-background shadow transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-        />
-      ))}
-    </SliderPrimitive.Root>
-  );
-});
-Slider.displayName = SliderPrimitive.Root.displayName;
+    />
+  ),
+);
+Slider.displayName = 'Slider';

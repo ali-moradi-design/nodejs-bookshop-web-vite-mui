@@ -1,5 +1,4 @@
 import { useMemo, useState } from 'react';
-import { type ColumnDef } from '@tanstack/react-table';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zNum, zNumOptional } from '@/shared/lib';
@@ -7,7 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import type { Resolver } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { DISCOUNT_TYPES, useDiscountsQuery, type Discount } from '@/entities/discount';
-import { DataTable } from '@/shared/ui';
+import { DataTable, type DataTableColumn } from '@/shared/ui';
 import { ApiError } from '@/shared/api';
 import {
   Alert,
@@ -81,34 +80,34 @@ export function AdminDiscountsPanel() {
   });
   const remove = useDeleteDiscountMutation();
 
-  const columns = useMemo<ColumnDef<Discount>[]>(
+  const columns = useMemo<DataTableColumn<Discount>[]>(
     () => [
-      { accessorKey: 'code', header: 'Code' },
-      { accessorKey: 'type', header: 'Type' },
-      { accessorKey: 'value', header: 'Value' },
-      { accessorKey: 'usedCount', header: 'Used' },
+      { field: 'code', header: 'Code' },
+      { field: 'type', header: 'Type' },
+      { field: 'value', header: 'Value' },
+      { field: 'usedCount', header: 'Used' },
       {
-        accessorKey: 'isActive',
+        field: 'isActive',
         header: 'Active',
-        cell: ({ row }) => (
-          <Badge variant={row.original.isActive ? 'success' : 'outline'}>
-            {row.original.isActive ? 'yes' : 'no'}
+        cell: (row) => (
+          <Badge variant={row.isActive ? 'success' : 'outline'}>
+            {row.isActive ? 'yes' : 'no'}
           </Badge>
         ),
       },
       {
         id: 'actions',
         header: t('common.actions'),
-        cell: ({ row }) => (
+        cell: (row) => (
           <div className="flex gap-2">
-            <Button size="sm" variant="outline" onClick={() => openEdit(row.original)}>
+            <Button size="sm" variant="outline" onClick={() => openEdit(row)}>
               {t('common.edit')}
             </Button>
             <Button
               size="sm"
               variant="destructive"
               onClick={() => {
-                if (confirm('Delete discount?')) remove.mutate(row.original.id);
+                if (confirm('Delete discount?')) remove.mutate(row.id);
               }}
             >
               {t('common.delete')}

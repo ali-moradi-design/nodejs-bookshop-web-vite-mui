@@ -1,9 +1,8 @@
 import { Link } from 'react-router-dom';
 import { useMemo } from 'react';
-import { type ColumnDef } from '@tanstack/react-table';
 import { useTranslation } from 'react-i18next';
 import { useOrdersQuery, type Order } from '@/entities/order';
-import { DataTable } from '@/shared/ui';
+import { DataTable, type DataTableColumn } from '@/shared/ui';
 import { formatMoney, formatDate } from '@/shared/lib';
 import { usePreferences } from '@/shared/hooks';
 import { Alert, Badge, Button, PageLoader } from '@/shared/ui';
@@ -14,38 +13,38 @@ export function PanelOrdersPage() {
   const locale = usePreferences((s) => s.locale);
   const { data, isLoading, error } = useOrdersQuery();
 
-  const columns = useMemo<ColumnDef<Order>[]>(
+  const columns = useMemo<DataTableColumn<Order>[]>(
     () => [
       {
-        accessorKey: 'id',
+        field: 'id',
         header: 'ID',
-        cell: ({ row }) => (
-          <Link className="text-primary underline" to={`/panel/orders/${row.original.id}`}>
-            {row.original.id.slice(-8)}
+        cell: (row) => (
+          <Link className="text-primary underline" to={`/panel/orders/${row.id}`}>
+            {row.id.slice(-8)}
           </Link>
         ),
       },
       {
-        accessorKey: 'status',
+        field: 'status',
         header: t('common.status'),
-        cell: ({ row }) => <Badge variant="secondary">{row.original.status}</Badge>,
+        cell: (row) => <Badge variant="secondary">{row.status}</Badge>,
       },
       {
-        accessorKey: 'totalAmount',
+        field: 'totalAmount',
         header: 'Total',
-        cell: ({ row }) => formatMoney(row.original.totalAmount, 'USD', locale),
+        cell: (row) => formatMoney(row.totalAmount, 'USD', locale),
       },
       {
-        accessorKey: 'createdAt',
+        field: 'createdAt',
         header: 'Created',
-        cell: ({ row }) => formatDate(row.original.createdAt, locale),
+        cell: (row) => formatDate(row.createdAt, locale),
       },
       {
         id: 'actions',
         header: t('common.actions'),
-        cell: ({ row }) => (
+        cell: (row) => (
           <Button asChild size="sm" variant="outline">
-            <Link to={`/panel/orders/${row.original.id}`}>{t('panel.orderDetail')}</Link>
+            <Link to={`/panel/orders/${row.id}`}>{t('panel.orderDetail')}</Link>
           </Button>
         ),
       },

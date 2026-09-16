@@ -1,4 +1,4 @@
-# nodejs-bookshop-web-vite
+# nodejs-bookshop-web-vite-mui
 
 **Vite + React + TypeScript SPA** bookstore frontend for the layered Mongo API  
 [`nodejs-bookshop-layered`](https://github.com/ali-moradi-design/nodejs-bookshop-layered).
@@ -11,8 +11,8 @@
 - **Vite** · React 19 · TypeScript (strict) · React Router
 - Feature-Sliced Design (`src/app`, `src/pages`, `src/widgets`, `src/features`, `src/entities`, `src/shared`)
 - Architecture guide: [`docs/fsd.md`](./docs/fsd.md) · `pnpm check:fsd`
-- Tailwind CSS v4 · shadcn/ui · Kokonut UI registry (`@kokonutui`)
-- TanStack Query · TanStack Table
+- Tailwind CSS v4 (layout utilities) · **Material UI (MUI)** shared components
+- TanStack Query · **AG Grid Community** data tables
 - React Hook Form + Zod
 - i18next (`en` + `fa`, RTL) · Vazirmatn / Inter
 - 3 named themes (Default, Desert, Rosy) × light/dark
@@ -54,7 +54,7 @@ npm run dev   # or: npm start after build
 # ensure Mongo is up and seed once: npm run seed
 
 # terminal 2 — this Vite SPA
-cd ../nodejs-bookshop-web-vite
+cd ../nodejs-bookshop-web-vite-mui
 pnpm install && pnpm dev
 ```
 
@@ -124,13 +124,11 @@ src/
   shared/       # api client, ui, i18n, config
 ```
 
-## Kokonut UI
+## UI libraries
 
-Registry configured in `components.json`:
-
-```bash
-pnpm dlx shadcn@latest add @kokonutui/button
-```
+- **MUI** (`@mui/material`) powers buttons, inputs, dialogs, drawers (sheets), selects, menus, alerts, and theme (`ThemeProvider` + `CssBaseline` + Emotion cache with RTL).
+- **AG Grid Community** powers admin / panel data tables (`DataTable` in `shared/ui`), themed via `themeMaterial` to follow light/dark MUI palettes.
+- Decorative `BeamsBackground` / `KokonutButton` remain as lightweight presentational helpers (no Radix/shadcn).
 
 ## License
 

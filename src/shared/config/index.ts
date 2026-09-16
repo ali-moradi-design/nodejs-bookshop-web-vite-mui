@@ -7,3 +7,4 @@ export {
   type ColorMode,
   type ThemeDefinition,
 } from './themes';
+export { getPaletteColors, type PaletteColors } from './mui-palette';
