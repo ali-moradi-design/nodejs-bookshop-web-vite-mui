@@ -8,6 +8,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Box from '@mui/material/Box';
 import { cn } from '@/shared/lib';
 import { Slot } from '@/shared/lib/slot';
+import { useControllableOpen } from '@/shared/lib/use-controllable-open';
 
 type DialogCtx = {
   open: boolean;
@@ -33,16 +34,7 @@ export function Dialog({
   onOpenChange?: (open: boolean) => void;
   children?: React.ReactNode;
 }) {
-  const [uncontrolled, setUncontrolled] = React.useState(defaultOpen);
-  const controlled = openProp !== undefined;
-  const open = controlled ? openProp : uncontrolled;
-  const setOpen = React.useCallback(
-    (v: boolean) => {
-      if (!controlled) setUncontrolled(v);
-      onOpenChange?.(v);
-    },
-    [controlled, onOpenChange],
-  );
+  const { open, setOpen } = useControllableOpen(openProp, defaultOpen, onOpenChange);
   return <DialogContext.Provider value={{ open, setOpen }}>{children}</DialogContext.Provider>;
 }
 

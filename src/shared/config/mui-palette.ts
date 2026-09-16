@@ -65,7 +65,7 @@ const PALETTES: Record<ThemeName, Record<ColorMode, PaletteColors>> = {
       background: '#150b18',
       paper: '#1e1022',
       text: '#f5eef7',
-      textSecondary: '#b8a8c8',
+      textSecondary: '#c4b0d4',
       error: '#f3533c',
       errorContrast: '#ffffff',
       divider: '#3c2044',

@@ -6,6 +6,7 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import { cn } from '@/shared/lib';
 import { Slot } from '@/shared/lib/slot';
+import { useControllableOpen } from '@/shared/lib/use-controllable-open';
 
 type SheetCtx = {
   open: boolean;
@@ -31,16 +32,7 @@ export function Sheet({
   onOpenChange?: (open: boolean) => void;
   children?: React.ReactNode;
 }) {
-  const [uncontrolled, setUncontrolled] = React.useState(defaultOpen);
-  const controlled = openProp !== undefined;
-  const open = controlled ? openProp : uncontrolled;
-  const setOpen = React.useCallback(
-    (v: boolean) => {
-      if (!controlled) setUncontrolled(v);
-      onOpenChange?.(v);
-    },
-    [controlled, onOpenChange],
-  );
+  const { open, setOpen } = useControllableOpen(openProp, defaultOpen, onOpenChange);
   return <SheetContext.Provider value={{ open, setOpen }}>{children}</SheetContext.Provider>;
 }
 

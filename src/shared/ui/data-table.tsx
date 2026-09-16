@@ -186,6 +186,7 @@ export function DataTable<T extends object>({
             }
             animateRows
             suppressCellFocus
+            suppressMovableColumns
             overlayNoRowsTemplate={t('common.empty')}
           />
         </div>
