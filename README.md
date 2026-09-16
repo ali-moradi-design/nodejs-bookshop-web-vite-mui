@@ -10,7 +10,7 @@
 
 - **Vite** · React 19 · TypeScript (strict) · React Router
 - Feature-Sliced Design (`src/app`, `src/pages`, `src/widgets`, `src/features`, `src/entities`, `src/shared`)
-- Architecture guide: [`docs/fsd.md`](./docs/fsd.md) · `pnpm check:fsd`
+- Architecture guide: [`docs/fsd.md`](./docs/fsd.md) · MUI/AG Grid notes: [`docs/mui-ag-grid.md`](./docs/mui-ag-grid.md) · `pnpm check:fsd`
 - Tailwind CSS v4 (layout utilities) · **Material UI (MUI)** shared components
 - TanStack Query · **AG Grid Community** data tables
 - React Hook Form + Zod

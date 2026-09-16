@@ -76,6 +76,7 @@ export function DropdownMenuContent({
         vertical: 'top',
         horizontal: align === 'start' ? 'left' : align === 'center' ? 'center' : 'right',
       }}
+      disableScrollLock
       slotProps={{ paper: { className: cn('min-w-[8rem]', className) } }}
     >
       {children}

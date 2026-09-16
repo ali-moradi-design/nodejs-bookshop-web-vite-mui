@@ -97,6 +97,7 @@ export function SelectTrigger({
       <MuiSelect
         value={ctx.value ?? ''}
         displayEmpty
+        MenuProps={{ disableScrollLock: true }}
         onChange={(e) => ctx.onValueChange?.(String(e.target.value))}
         renderValue={(selected) => {
           const s = String(selected ?? '');
