@@ -2,14 +2,14 @@
 
 This SPA follows FSD layers (top → bottom):
 
-| Layer      | Responsibility                                      | Examples                               |
-| ---------- | --------------------------------------------------- | -------------------------------------- |
-| `app`      | Providers, router, global styles                    | `app/providers`, `app/router`          |
-| `pages`    | Thin route composition                              | `pages/catalog`, `pages/admin/books`   |
-| `widgets`  | Composite UI blocks                                 | `header`, `book-detail`, `cart-panel`  |
-| `features` | User interactions (forms, toggles, mutations + UI)  | `auth`, `cart`, `pay-order`, `reviews` |
-| `entities` | Business data, API, query keys, display cards       | `book`, `order`, `cart`                |
-| `shared`   | UI kit, api client, config, i18n, domain-free hooks | `shared/ui`, `shared/api`              |
+| Layer      | Responsibility                                          | Examples                               |
+| ---------- | ------------------------------------------------------- | -------------------------------------- |
+| `app`      | Providers, router, global styles                        | `app/providers`, `app/router`          |
+| `pages`    | Thin route composition                                  | `pages/catalog`, `pages/admin/books`   |
+| `widgets`  | Composite UI blocks                                     | `header`, `book-detail`, `cart-panel`  |
+| `features` | User interactions (forms, toggles, mutations + UI)      | `auth`, `cart`, `pay-order`, `reviews` |
+| `entities` | Business data, API, query keys, display cards           | `book`, `order`, `cart`                |
+| `shared`   | MUI UI kit, AG Grid DataTable, api client, config, i18n | `shared/ui`, `shared/api`              |
 
 There is **no** `processes` layer unless a multi-page business flow clearly needs one.
 

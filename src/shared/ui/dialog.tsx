@@ -97,13 +97,13 @@ export function DialogContent({
 }: React.HTMLAttributes<HTMLDivElement>) {
   const { open, setOpen } = useDialog();
   return (
-    <MuiDialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="sm">
-      <Box className={cn('relative p-2', className)} {...props}>
+    <MuiDialog open={open} onClose={() => setOpen(false)} fullWidth maxWidth="sm" scroll="paper">
+      <Box className={cn('relative px-6 py-5', className)} {...props}>
         <IconButton
           aria-label="Close"
           onClick={() => setOpen(false)}
           size="small"
-          sx={{ position: 'absolute', top: 8, insetInlineEnd: 8, zIndex: 1 }}
+          sx={{ position: 'absolute', top: 12, insetInlineEnd: 12, zIndex: 1 }}
         >
           <CloseIcon fontSize="small" />
         </IconButton>
@@ -116,14 +116,14 @@ export function DialogContent({
 export function DialogHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <Box
-      className={cn('mb-2 flex flex-col space-y-1.5 text-center sm:text-start', className)}
+      className={cn('mb-3 flex flex-col space-y-1.5 pe-8 text-center sm:text-start', className)}
       {...props}
     />
   );
 }
 
 export function DialogFooter({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <MuiDialogActions className={cn('px-0 pt-4', className)} {...props} />;
+  return <MuiDialogActions className={cn('!px-0 !pb-0 pt-4', className)} {...props} />;
 }
 
 export function DialogTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {

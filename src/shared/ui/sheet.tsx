@@ -92,12 +92,15 @@ export function SheetContent({
   ...props
 }: React.HTMLAttributes<HTMLDivElement> & { side?: Side }) {
   const { open, setOpen } = useSheet();
-  const anchor = side;
   return (
-    <Drawer anchor={anchor} open={open} onClose={() => setOpen(false)}>
+    <Drawer anchor={side} open={open} onClose={() => setOpen(false)}>
       <Box
-        className={cn('relative flex h-full w-full flex-col sm:max-w-sm', className)}
-        sx={{ width: { xs: '100vw', sm: 400 }, maxWidth: '100vw' }}
+        className={cn('relative flex h-full w-full flex-col', className)}
+        sx={{
+          width: { xs: '100vw', sm: 448 },
+          maxWidth: '100vw',
+          boxSizing: 'border-box',
+        }}
         {...props}
       >
         <IconButton
@@ -117,7 +120,7 @@ export function SheetContent({
 export function SheetHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <Box
-      className={cn('flex flex-col space-y-2 text-center sm:text-start', className)}
+      className={cn('flex flex-col space-y-2 pe-10 text-center sm:text-start', className)}
       {...props}
     />
   );

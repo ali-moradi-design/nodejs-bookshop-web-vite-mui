@@ -62,7 +62,7 @@ function CellRenderer<T>({
   return null;
 }
 
-export function DataTable<T>({
+export function DataTable<T extends object>({
   columns,
   data,
   pageSize = 10,
@@ -105,14 +105,15 @@ export function DataTable<T>({
           headerComponent: typeof col.header === 'string' ? undefined : () => <>{col.header}</>,
           width: col.width,
           flex: col.flex ?? (col.width ? undefined : 1),
-          minWidth: col.minWidth ?? 100,
+          minWidth: col.minWidth ?? 120,
           sortable: col.sortable ?? false,
+          autoHeight: Boolean(col.cell),
+          wrapText: Boolean(col.cell),
           cellRenderer: (params: ICellRendererParams<T>) => (
             <CellRenderer params={params} column={col} />
           ),
         };
         if (col.field) {
-          // AG Grid field typing is stricter than keyof T & string
           (def as ColDef).field = col.field;
         }
         return def;
@@ -120,15 +121,21 @@ export function DataTable<T>({
     [columns],
   );
 
+  const resolveRowId = useCallback(
+    (row: T) => {
+      if (getRowId) return getRowId(row);
+      if ('id' in row && row.id != null) return String((row as { id: string | number }).id);
+      return undefined;
+    },
+    [getRowId],
+  );
+
   const onGridReady = useCallback(
     (e: GridReadyEvent<T>) => {
       apiRef.current = e.api;
-      if (pagination) {
-        e.api.setGridOption('paginationPageSize', pagination.pageSize);
-        e.api.paginationGoToPage(pagination.pageIndex);
-      } else {
-        e.api.setGridOption('paginationPageSize', pageSize);
-      }
+      const size = pagination?.pageSize ?? pageSize;
+      e.api.setGridOption('paginationPageSize', size);
+      if (pagination) e.api.paginationGoToPage(pagination.pageIndex);
     },
     [pagination, pageSize],
   );
@@ -145,8 +152,11 @@ export function DataTable<T>({
   );
 
   const currentPage = pagination?.pageIndex ?? 0;
-  const totalPages =
-    pageCount ?? Math.max(1, Math.ceil(data.length / (pagination?.pageSize ?? pageSize)));
+  const pageSz = pagination?.pageSize ?? pageSize;
+  const totalPages = pageCount ?? Math.max(1, Math.ceil(data.length / pageSz) || 1);
+
+  const rowCount = Math.max(data.length, 1);
+  const gridHeight = Math.min(560, 56 + Math.min(rowCount, 12) * 52);
 
   return (
     <Box className="space-y-3">
@@ -154,20 +164,28 @@ export function DataTable<T>({
         className="overflow-hidden rounded-xl border"
         sx={{ borderColor: 'divider', bgcolor: 'background.paper', width: '100%' }}
       >
-        <div style={{ width: '100%', height: Math.min(560, 52 + Math.max(data.length, 3) * 48) }}>
+        <div style={{ width: '100%', height: gridHeight }}>
           <AgGridReact<T>
             theme={gridTheme}
             rowData={data}
             columnDefs={colDefs}
             pagination={!manualPagination}
-            paginationPageSize={pagination?.pageSize ?? pageSize}
+            paginationPageSize={pageSz}
+            paginationPageSizeSelector={manualPagination ? false : [10, 20, 50]}
             suppressPaginationPanel={Boolean(manualPagination)}
             onGridReady={onGridReady}
             onPaginationChanged={manualPagination ? onPaginationChanged : undefined}
-            getRowId={getRowId ? (p) => getRowId(p.data as T) : undefined}
+            getRowId={
+              data[0] != null && resolveRowId(data[0]) !== undefined
+                ? (p) => {
+                    const id = resolveRowId(p.data as T);
+                    if (id == null) throw new Error('Missing row id');
+                    return id;
+                  }
+                : undefined
+            }
             animateRows
             suppressCellFocus
-            domLayout={data.length <= 12 && !manualPagination ? 'autoHeight' : undefined}
             overlayNoRowsTemplate={t('common.empty')}
           />
         </div>
@@ -178,12 +196,7 @@ export function DataTable<T>({
             size="small"
             variant="outlined"
             disabled={currentPage <= 0}
-            onClick={() =>
-              onPaginationChange?.({
-                pageIndex: currentPage - 1,
-                pageSize: pagination?.pageSize ?? pageSize,
-              })
-            }
+            onClick={() => onPaginationChange?.({ pageIndex: currentPage - 1, pageSize: pageSz })}
           >
             {t('common.previous')}
           </Button>
@@ -195,12 +208,7 @@ export function DataTable<T>({
             size="small"
             variant="outlined"
             disabled={currentPage + 1 >= totalPages}
-            onClick={() =>
-              onPaginationChange?.({
-                pageIndex: currentPage + 1,
-                pageSize: pagination?.pageSize ?? pageSize,
-              })
-            }
+            onClick={() => onPaginationChange?.({ pageIndex: currentPage + 1, pageSize: pageSz })}
           >
             {t('common.next')}
           </Button>
